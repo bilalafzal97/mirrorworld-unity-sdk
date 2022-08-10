@@ -68,5 +68,41 @@ namespace mirrorworld_unity_sdk.Runtime.Services.Implementations
 
             callBack(responseBody);
         }
+
+        public IEnumerator LoginWithGoogle(LoginWithGoogleRequest requestBody, Action<CommonResponse<LoginResponse>> callBack)
+        {
+            var rawRequestBody = JsonConvert.SerializeObject(requestBody);
+
+            string endpoint = _baseUrlWithVersion + "auth/google";
+            
+            UnityWebRequest request = new UnityWebRequest(endpoint, "POST");
+            
+            Utils.SetContentTypeHeader(request);
+            Utils.SetAcceptHeader(request);
+            Utils.SetApiKeyHeader(request, _apiKey);
+
+            byte[] rawRequestBodyToSend = new System.Text.UTF8Encoding().GetBytes(rawRequestBody);
+            request.uploadHandler = new UploadHandlerRaw(rawRequestBodyToSend);
+            request.downloadHandler = new DownloadHandlerBuffer();
+        
+            yield return request.SendWebRequest();
+        
+            string rawResponseBody = request.downloadHandler.text;
+
+            CommonResponse<LoginResponse> responseBody;
+
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                responseBody = Utils.CustomErrorResponse<LoginResponse>(request.responseCode, request.error, rawResponseBody);
+            }
+            else
+            {
+                responseBody = JsonConvert.DeserializeObject<CommonResponse<LoginResponse>>(rawResponseBody);
+                responseBody.HttpStatusCode = request.responseCode;
+                
+            }
+
+            callBack(responseBody);
+        }
     }
 }

@@ -9,5 +9,6 @@ namespace mirrorworld_unity_sdk.Runtime.Services.Interfaces
     public interface IAuthenticationService
     {
         public IEnumerator LoginWithEmail(BasicEmailLogin requestBody, Action<CommonResponse<LoginResponse>> callBack);
+        public IEnumerator LoginWithGoogle(LoginWithGoogleRequest requestBody, Action<CommonResponse<LoginResponse>> callBack);
     }
 }
