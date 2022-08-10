@@ -36,8 +36,10 @@ namespace mirrorworld_unity_sdk.Runtime.Services.Implementations
         public IEnumerator LoginWithEmail(BasicEmailLogin requestBody, Action<CommonResponse<LoginResponse>> callBack)
         {
             var rawRequestBody = JsonConvert.SerializeObject(requestBody);
-        
-            UnityWebRequest request = new UnityWebRequest(_baseUrlWithVersion + "/auth/login", "POST");
+
+            string endpoint = _baseUrlWithVersion + "auth/login";
+            
+            UnityWebRequest request = new UnityWebRequest(endpoint, "POST");
             
             Utils.SetContentTypeHeader(request);
             Utils.SetAcceptHeader(request);
